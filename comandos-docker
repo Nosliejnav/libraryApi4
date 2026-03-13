@@ -1,0 +1,63 @@
+## Rodar container Postgre na versão 16.5
+docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library postgres:16.5
+
+## Rodar Pgadmin 4 "email nome errado foi admin@amin.com" e sem versao postgres especifico tinha que colocar no fnal "dpage/pgadmin4:8.9"
+docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@amin.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4
+
+# Ver Container rodando ou não
+docker ps
+
+CONTAINER ID   IMAGE            COMMAND                  CREATED          STATUS          PORTS                            NAMES
+1c4f6badc225   dpage/pgadmin4   "/entrypoint.sh"         9 minutes ago    Up 9 minutes    443/tcp, 0.0.0.0:15432->80/tcp   pgadmin4
+6aa7d5f62171   postgres:16.5    "docker-entrypoint.s…"   21 minutes ago   Up 21 minutes   0.0.0.0:5432->5432/tcp           librarydb
+
+# POR MOTIVO DAS PORTAS ESTAREM INCOMPATÍVEL DOS 2 CONTAINER, AMBAS SERAM REMOVIDAS E REFEITAS.#
+
+# Parar Containers comando  "docker stop" + "NAMES"
+docker stop pgadmin4
+docker stop library
+
+# Ver Container parados para possivelmente rodar novamente ou não
+docker ps -a
+
+# Remover Container definitivamente "comando + nome"
+docker container rm pgadmin4
+docker container rm librarydb
+
+# IMPORTANTE  Create Network: #
+# COMANDO PARA CRIAR A NETWORK PARA RESOLVER O PROBLEMA DAS PORTAS INCOMPATÍVEL
+docker network create library-network
+
+# Rodar container Postgre na versão 16.3
+docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library --network library-network postgres:16.3
+
+# Rodar Pgadmin 4
+docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin --network library-network dpage/pgadmin4
+
+# Ver Container rodando ou não
+docker ps
+
+#COMANDO PARA EVITAR ERRO DE CONTAINERS ENTRAR EM PAUSA, FECHANDO O CMD COLOCAR " -d "
+# Rodar container Postgre na versão 16.3
+docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library --network library-network -d postgres:16.3
+
+# Rodar Pgadmin 4
+docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin --network library-network -d dpage/pgadmin4
+
+
+CONTAINER ID   IMAGE            COMMAND                  CREATED              STATUS              PORTS                            NAMES
+d7f19606d91c   dpage/pgadmin4   "/entrypoint.sh"         About a minute ago   Up About a minute   443/tcp, 0.0.0.0:15432->80/tcp   pgadmin4
+f3e0e7ca4746   postgres:16.3    "docker-entrypoint.s…"   4 minutes ago        Up 4 minutes        0.0.0.0:5432->5432/tcp           librarydb
+
+# IMPORTANTE 2 Check port: #
+# COMANADO PARA EVITAR UM DOS ERROS MAIS FREQUENTES DE PORTA OCUPADA MEDIANTE E DISPONIVEL
+#APARECE TODAS AS PORTAS
+netstat -aof
+
+#APARECE A PORTA DESTACADA
+#OCUPADA POR SER A DE USO ANTERIOMENTE CRIADO
+netstat -aof | findstr 5432
+
+#DISPONIVEL POR NÃO TER CRIADO NADA COM ESSA PORTA
+netstat -aof | findstr 5433
+

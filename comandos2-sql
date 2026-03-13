@@ -1,0 +1,120 @@
+create table tb_autor(
+  id uuid not null primary key,
+  nome varchar(100) not null,
+  data_nascimento date not null,
+  nacionalidade varchar(50) not null
+);
+
+create table livro (
+   id uuid not null primary key,
+   isbn varchar(20) not null,
+   titulo varchar(150) not null,
+   data_publicacao date not null,
+   genero varchar(30) not null,
+   preco numeric(18,2),
+   id_autor uuid not null references autor(id),
+   constraint chk_genero check (genero in ('FICCAO', 'FANTASIA', 'MISTERIO','ROMANCE', 'BIOGRAFIA', 'CIENCIA') )
+);
+
+drop table livro;
+drop table autor;
+
+create table autor(
+	id uuid not null primary key,
+	nome varchar(100) not null,
+	data_nascimento date not null,
+	nacionalidade varchar(50) not null
+	data_cadastro timestamp,
+	data_atualização timestamp,
+	id_usuario uuid
+);
+
+select * from autor
+
+create table livro(
+	id uuid not null primary key,
+	isbn varchar(20) not null unique,
+	titulo varchar(150) not null,
+	data_publicacao date not null,
+	genero varchar(30) not null,
+	preco numeric(18,2),
+	data_cadastro timestamp,
+	data_atualização timestamp,
+	id_usuario uuid,
+	id_autor uuid not null references autor(id),
+	constraint chk_genero check (genero in ('FICCAO', 'FANTASIA', 'MISTERIO', 'ROMANCE','BIOGRAFIA','CIENCIA'))
+);
+
+select * from livro
+
+drop table autor;
+drop table livro;
+
+select l.titulo as nome_livro, a.nome as nome_autor
+from livro as l
+join autor as a on a.id = l.id_autor
+
+select l.id, l.titulo as nome_livro, a.nome as nome_autor
+from livro as l
+join autor as a on a.id = l.id_autor
+
+select * from livro where id = '41dde997-6bee-49cd-8b36-2f924de2d155'
+
+
+select * from livro where id = 'ee169261-0b5a-4b4f-b228-8b86c271bd37'
+
+
+select l.id as id_livro, l.titulo as titulo_livro, a.nome as nome_autor, a.id as id_autor
+from livro l
+join autor a on a.id = l.id_autor
+
+
+select * from livro where id_autor = 'dd66715e-7835-4156-b3c5-11577821ebea'
+
+
+select
+    l.id,
+    l.titulo,
+    a.id,
+    a.nome
+from livro as l
+    join autor as a on a.id = l.id_autor;
+
+    select distinct titulo from livro;
+
+select *
+from livro
+where titulo like '%casa assombrada%';
+
+
+select l.* from livro as l order by l.titulo, l.preco;
+
+select a. *
+from livro l
+join autor a on a.id = l.id_autor;
+
+select *
+from livro l
+where titulo like '%UF%'
+
+select distinct l.genero
+from livro l
+join autor a on a.id = l.id_autor
+where a.nacionalidade = 'Brasileira'
+order by l.genero;
+
+select * from autor
+
+    /**
+     *  Commit -> confirmar as alterações
+     *  Rollback -> desfazer as alterações
+     */
+
+begin;
+
+update livro set titulo = 'O Detetive 2' where id = '20b2e42b-7ceb-4ad9-bdf9-ed848e713026'
+
+commit;
+
+rollback;
+
