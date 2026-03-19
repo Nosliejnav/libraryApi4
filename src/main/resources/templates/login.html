@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000000;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #e7e9ea;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 2rem;
+            background: #000000;
+            border: 1px solid #2f3336;
+            border-radius: 16px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: #e7e9ea;
+        }
+
+        .form-label {
+            color: #71767b;
+            font-size: 14px;
+        }
+
+        .form-control {
+            background-color: #000000;
+            border: 1px solid #2f3336;
+            border-radius: 6px;
+            color: #e7e9ea;
+            padding: 10px;
+        }
+
+        .form-control:focus {
+            border-color: #1d9bf0;
+            box-shadow: none;
+            background-color: #000000;
+            color: #e7e9ea;
+        }
+
+        .form-control::placeholder {
+            color: #71767b;
+        }
+
+        .btn-primary {
+            background-color: #eff3f4;
+            color: #0f1419;
+            border: none;
+            border-radius: 9999px;
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: #d7dbdc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container mt-5">
+    <h2 class="text-center">Login</h2>
+    <form method="post" th:action="@{/login}">
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuário</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Digite seu usuário" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Digite sua senha" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
