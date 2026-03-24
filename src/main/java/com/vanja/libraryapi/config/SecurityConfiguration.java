@@ -25,15 +25,11 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(configurer -> {
-                    configurer.loginPage("/login").permitAll();
+                    configurer.loginPage("/login");
                 })
                 .authorizeHttpRequests(authorize ->{
                     authorize.requestMatchers("/login").permitAll();
-                    authorize.requestMatchers(HttpMethod.POST,"/autores/**").hasAuthority("CADASTRAR_AUTOR");
-                    authorize.requestMatchers(HttpMethod.DELETE,"/autores/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.PUT,"/autores/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.GET,"/autores/**").hasAnyRole("USER","ADMIN");
-//                    authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers("/autores/**").hasRole("ADMIN");
                     authorize.requestMatchers("/livros/**").hasAnyRole("USER","ADMIN");
 
                     // Importante: anyRequest() deve ser sempre a última regra.
