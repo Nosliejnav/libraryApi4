@@ -23,7 +23,6 @@ public class Usuario {
     @Column
     private String senha;
 
-    // Criando a estrutura de usuários no banco de dados e //  utilizando tipo array especial com dependencia nova
     @Type(ListArrayType.class)
     @Column(name = "roles", columnDefinition = "varchar[]")
     private List<String> roles;
