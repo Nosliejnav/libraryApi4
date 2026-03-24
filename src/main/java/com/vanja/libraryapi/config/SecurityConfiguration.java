@@ -27,8 +27,18 @@ public class SecurityConfiguration {
                     configurer.loginPage("/login").permitAll();
                 })
                 .authorizeHttpRequests(authorize ->{
-                    authorize.requestMatchers("/autores/**").permitAll();
+                    authorize.requestMatchers("/login").permitAll();
+                    authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers("/livros/**").hasAnyRole("USER","ADMIN");
+
+                    // Importante: anyRequest() deve ser sempre a última regra.
+                    // O Spring Security avalia as permissões na ordem em que são declaradas.
                     authorize.anyRequest().authenticated();
+
+                    // Se houver qualquer configuração abaixo de "authorize.anyRequest().authenticated()",
+                    // ela será ignorada. Regras específicas devem ser declaradas sempre antes dela.
+//                    authorize.requestMatchers("/livros/**").hasAnyRole("USER","ADMIN");
+
                 })
                 .build();
     }
