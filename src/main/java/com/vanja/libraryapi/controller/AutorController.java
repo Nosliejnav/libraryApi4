@@ -7,6 +7,7 @@ import com.vanja.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.vanja.libraryapi.exceptions.RegistroDuplicadoException;
 import com.vanja.libraryapi.model.Autor;
 import com.vanja.libraryapi.model.Usuario;
+import com.vanja.libraryapi.security.SecurityService;
 import com.vanja.libraryapi.service.AutorService;
 import com.vanja.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -31,19 +32,13 @@ import java.util.stream.Collectors;
 public class AutorController implements GenericController {
 
     private final AutorService service;
-    private final UsuarioService usuarioService;
+    private final SecurityService securityService;
     private final AutorMapper mapper;
 
     @PostMapping
     @PreAuthorize("hasRole('GERENTE')")
-    public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto,
-                                       Authentication authentication) {
-
-        UserDetails usuarioLogado = (UserDetails) authentication.getPrincipal();
-        Usuario usuario = usuarioService.obterPorLogin(usuarioLogado.getUsername());
-
+    public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
         Autor autor = mapper.toEntity(dto);
-        autor.setIdUsuario(usuario.getId());
         service.salvar(autor);
         URI location = gerarHeaderLocation(autor.getId());
         return ResponseEntity.created(location).build();
