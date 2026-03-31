@@ -52,6 +52,10 @@ select *
     roles varchar[]
  );
 
- select * from usuario
+select * from usuario
 
- delete from usuario
+delete from usuario
+
+select * from autor
+
+select * from usuario where id = 'c5b510cc-0fdc-400e-9228-a83b1401735c'

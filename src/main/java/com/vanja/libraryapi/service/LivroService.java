@@ -2,7 +2,9 @@ package com.vanja.libraryapi.service;
 
 import com.vanja.libraryapi.model.GeneroLivro;
 import com.vanja.libraryapi.model.Livro;
+import com.vanja.libraryapi.model.Usuario;
 import com.vanja.libraryapi.repository.LivroRepository;
+import com.vanja.libraryapi.security.SecurityService;
 import com.vanja.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,9 +25,12 @@ public class LivroService {
 
     private final LivroRepository repository;
     private final LivroValidator validator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro) {
         validator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuario);
         return repository.save(livro);
     }
 

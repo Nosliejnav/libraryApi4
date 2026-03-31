@@ -2,8 +2,10 @@ package com.vanja.libraryapi.service;
 
 import com.vanja.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.vanja.libraryapi.model.Autor;
+import com.vanja.libraryapi.model.Usuario;
 import com.vanja.libraryapi.repository.AutorRepository;
 import com.vanja.libraryapi.repository.LivroRepository;
+import com.vanja.libraryapi.security.SecurityService;
 import com.vanja.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -20,11 +22,14 @@ public class AutorService {
 
     private final AutorRepository repository;
     private final AutorValidator validator;
-
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
     public Autor salvar(Autor autor){
         validator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
+
         return repository.save(autor);
     }
 

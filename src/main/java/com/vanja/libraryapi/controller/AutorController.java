@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 public class AutorController implements GenericController {
 
     private final AutorService service;
-    private final SecurityService securityService;
     private final AutorMapper mapper;
 
     @PostMapping
