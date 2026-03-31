@@ -6,11 +6,15 @@ import com.vanja.libraryapi.controller.mappers.AutorMapper;
 import com.vanja.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.vanja.libraryapi.exceptions.RegistroDuplicadoException;
 import com.vanja.libraryapi.model.Autor;
+import com.vanja.libraryapi.model.Usuario;
 import com.vanja.libraryapi.service.AutorService;
+import com.vanja.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -27,12 +31,19 @@ import java.util.stream.Collectors;
 public class AutorController implements GenericController {
 
     private final AutorService service;
+    private final UsuarioService usuarioService;
     private final AutorMapper mapper;
 
     @PostMapping
     @PreAuthorize("hasRole('GERENTE')")
-    public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
+    public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto,
+                                       Authentication authentication) {
+
+        UserDetails usuarioLogado = (UserDetails) authentication.getPrincipal();
+        Usuario usuario = usuarioService.obterPorLogin(usuarioLogado.getUsername());
+
         Autor autor = mapper.toEntity(dto);
+        autor.setIdUsuario(usuario.getId());
         service.salvar(autor);
         URI location = gerarHeaderLocation(autor.getId());
         return ResponseEntity.created(location).build();
