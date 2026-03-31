@@ -51,3 +51,7 @@ select *
     senha varchar(300) not null,
     roles varchar[]
  );
+
+ select * from usuario
+
+ delete from usuario
